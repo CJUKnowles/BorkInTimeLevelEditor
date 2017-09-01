@@ -61,7 +61,7 @@ public class Bullet extends GameObject {
 			offY += GameManager.TS;
 		}
 
-		if (offX > GameManager.TS / (GameManager.TS / size)) {
+		if (offX >  GameManager.TS / (GameManager.TS / size)) {
 			tileX++;
 			offX -= GameManager.TS;
 		}
