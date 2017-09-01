@@ -1,0 +1,31 @@
+Ideas / To Do
+---------------------
+-colors may not be a perfect (0, 255, 0) forever, may need to have specific colors if I want to add extra features
+
+-Win condition
+	-Win if the player reaches a certain color of the level, for now winning will just print something on the screen
+-Enemy health
+	-Add a system for health in turrets, even if they only have one
+	-To be reused in code for other enemies
+-Melee Enemies
+	-Will follow same gravity/jumping rules as the player
+	-Will follow the player
+	-Will deal ticking damage within a certain range
+	-Impossible to kill with melee without taking damage
+-Cannons/Static Turrets
+	-Will not fire towards player, but in a set direction and pace
+	-Will fire different projectiles from normal turrets
+		-Larger
+		-slower
+		-deals more damage
+		-does not despawn on contact with player
+	-Cannot be destroyed
+-Bubble ability
+	-Costs ~40 mana
+	-Creates a bubble shield around the player
+	-shield will absorb one hit, regardless of the amount of damage
+	-Health bar will have a semi transparent golden cover on it while the bubble is active
+	-cannot stack more than one bubble
+-EMP ability
+	-costs ~100 mana
+	-disables all enemies on screen/within a certain range

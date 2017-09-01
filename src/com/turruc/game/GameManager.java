@@ -1,0 +1,279 @@
+package com.turruc.game;
+
+import java.util.ArrayList;
+
+import com.turruc.engine.AbstractGame;
+import com.turruc.engine.GameContainer;
+import com.turruc.engine.Renderer;
+import com.turruc.engine.gfx.Image;
+import com.turruc.engine.gfx.ImageTile;
+import com.turruc.engine.gfx.Light;
+import com.turruc.game.entities.EntityType;
+import com.turruc.game.entities.GameObject;
+import com.turruc.game.entities.Lava;
+import com.turruc.game.entities.Player;
+import com.turruc.game.entities.ResourceBall;
+import com.turruc.game.entities.Turret;
+
+public class GameManager extends AbstractGame {
+	private static GameContainer gc;
+
+	public static final int TS = 32; // tilesize for hitboxes
+
+	private static ArrayList<GameObject> objects = new ArrayList<GameObject>();
+	private Camera camera;
+
+	private int[] collision;
+	private int levelW, levelH;
+
+	private ImageTile dirt;
+	private Image background;
+	private Image level;
+	private ImageTile lava;
+	private Player player;
+
+	public GameManager() {
+		player = new Player(5, 5);
+		getObjects().add(player);
+		level = new Image("/level.png");
+		loadLevel("/level.png");
+		camera = new Camera(EntityType.player);
+		dirt = new ImageTile("/dirtTileset.png", 32, 32);
+		background = new Image("/background.png");
+		lava = new ImageTile("/lava.png", 32, 32);
+	}
+
+	@Override
+	public void init(GameContainer gc) {
+		gc.getRenderer().setAmbientColor(-1);
+	}
+
+	@Override
+	public void update(GameContainer gc, float dt) {
+		for (int i = 0; i < getObjects().size(); i++) {
+			getObjects().get(i).update(gc, this, dt);
+			if (getObjects().get(i).isDead()) {
+				getObjects().remove(i);
+				i--;
+			}
+		}
+		camera.update(gc, this, dt);
+	}
+
+	@Override
+	public void render(GameContainer gc, Renderer r) {
+		camera.render(r);
+
+		// Start of drawing map
+		r.drawFillRect(0, 0, levelW * TS, levelH * TS, 0xff488Aff);
+		// r.drawImage(background, 0, 0);
+
+		for (int y = 0; y < levelH; y++) {
+			for (int x = 0; x < levelW; x++) {
+				//drawing normal tileset (dirt, cave, etc)
+				if (collision[x + y * levelW] == 1) {
+					if (y != 0 && y != levelH - 1 && x != 0 && x != levelW) {
+						if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] >= 1) {
+							dirt.getTileImage(0, 0).setLightBlock(Light.FULL);
+							r.drawImageTile(dirt, x * TS, y * TS, 0, 0); // up
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 1, 0); // left
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 2, 0); // down
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 0); // right
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 0, 1); // up, left
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 1, 1); // up, right
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 2, 1); // down, right
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 1); // down, left
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 0, 2); // up, down
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 1, 2); // left, right
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 2, 2); // up, left, right
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 2); // up, down, right
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 0, 3); // left, right, down
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 1, 3); // up, left, down
+						} else if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] <= 0 && collision[x + (y + 1) * levelW] <= 0 && collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 2, 3); // up, left, down, right
+						} else if (collision[x + (y - 1) * levelW] >= 1 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] >= 1) {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 3); // none
+						}
+
+						// top row
+					} else if (y == 0) {
+						if (collision[x + (y + 1) * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 2, 0); // down
+						} else {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 3); // none
+						}
+
+						// left column
+					} else if (x == 0) {
+						if (collision[(x + 1) + y * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 0); // right
+						} else {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 3); // none
+						}
+						// bottom row
+					} else if (y == levelH - 1) {
+						if (collision[x + (y - 1) * levelW] <= 0) {
+							r.drawImageTile(dirt, x * TS, y * TS, 0, 0); // up
+						} else {
+							r.drawImageTile(dirt, x * TS, y * TS, 3, 3); // none
+						}
+					}
+				}
+				//end of drawing normal tileset
+				
+				//Drawing lava
+				if (collision[x + y * levelW] == 3) {
+					if (collision[x + (y - 1) * levelW] == 3) {
+						r.drawImageTile(lava, x * TS, y * TS, 0, 1); // none
+					} else {
+						r.drawImageTile(lava, x * TS, y * TS, 0, 0); // up
+					}
+
+				}
+				//end of drawing lava
+				
+				// end of drawing map
+			}
+		}
+
+		for (GameObject obj : getObjects()) {
+			obj.render(gc, r);
+
+		}
+
+		r.drawText("Left Click: Shoot", (int) camera.getOffX(), 32, 0xffffffff);
+		r.drawText("Right Click: Melee", (int) camera.getOffX(), 48, 0xffffffff);
+		r.drawText("Shift: Teleport", (int) camera.getOffX(), 64, 0xffffffff);
+		r.drawText("Ctrl: Slow Motion", (int) camera.getOffX(), 80, 0xffffffff);
+
+	}
+
+	public void loadLevel(String path) {
+		Image levelImage = new Image(path);
+
+		levelW = levelImage.getW();
+		levelH = levelImage.getH();
+		collision = new int[levelW * levelH];
+
+		for (int y = 0; y < levelImage.getH(); y++) {
+			for (int x = 0; x < levelImage.getW(); x++) {
+
+				if (levelImage.getP()[x + y * levelImage.getW()] == 0xffff00ff) {// Pink
+					collision[x + y * levelImage.getW()] = -100;// player
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff000000) {// black
+					collision[x + y * levelImage.getW()] = 1; // collision block
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffffffff) {// white
+					collision[x + y * levelImage.getW()] = 0;// air
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ff00) {// green
+					collision[x + y * levelImage.getW()] = 2;// turret
+				} else if ((levelImage.getP()[x + y * levelImage.getW()] | 0xff000000) == 0xffff0000) {// red // |
+																										// 0xff000000
+																										// removes alpha
+					collision[x + y * levelImage.getW()] = -1;// health ball
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff0000ff) {// blue
+					collision[x + y * levelImage.getW()] = -2;// mana ball
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffffff00) {// yellow
+					collision[x + y * levelImage.getW()] = 3;// lava
+				}
+			}
+		}
+
+		for (int y = 0; y < levelH; y++) {
+			for (int x = 0; x < levelW; x++) {
+				if (collision[x + y * levelW] == -100) { // player
+					player.moveTo(x * TS, y * TS);
+				}
+
+				if (collision[x + y * levelW] == 2) { // turret
+					getObjects().add(new Turret(this, x, y));
+				}
+
+				if (collision[x + y * levelW] == -1) { // healthBall
+					getObjects().add(new ResourceBall(this, x, y, 0, 101 + (level.getP()[x + y * levelW] >> 24)));
+				}
+
+				if (collision[x + y * levelW] == -2) { // manaBall
+					getObjects().add(new ResourceBall(this, x, y, 1, 101 + (level.getP()[x + y * levelW] >> 24)));
+				}
+
+			}
+		}
+	}
+
+	public void addObject(GameObject object) {
+		getObjects().add(object);
+	}
+
+	public GameObject getObject(EntityType tag) {
+		for (int i = 0; i < getObjects().size(); i++) {
+			if (getObjects().get(i).getTag().equals(tag)) {
+				return getObjects().get(i);
+			}
+		}
+		return null;
+	}
+
+	public boolean getCollision(int x, int y) {
+		if (x < 0 || x >= levelW || y < 0 || y >= levelH) {
+			return true;
+		}
+
+		if (collision[x + y * levelW] == 1 || collision[x + y * levelW] == 2) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public int getCollisionNum(int x, int y) {
+		return collision[x + y * levelW];
+	}
+
+	public static void main(String[] args) {
+		gc = new GameContainer(new GameManager());
+
+		gc.start();
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public int getLevelW() {
+		return levelW;
+	}
+
+	public int getLevelH() {
+		return levelH;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public static ArrayList<GameObject> getObjects() {
+		return objects;
+	}
+
+	public int[] getCollision() {
+		return collision;
+	}
+
+	public static GameContainer getGc() {
+		return gc;
+	}
+
+}
