@@ -15,7 +15,7 @@ public class GameContainer implements Runnable {
 											// scaled to fullscreen
 	private float scale = 2f; // Scales the resolution. 960x540 with a scale of 2f turns into 1920x1080
 								// (literally like a render scale in games)
-	private String title = "GameEngine v1.0";
+	private String title = "A Bork In Time!";
 
 	public GameContainer(AbstractGame game) {
 		this.game = game;
