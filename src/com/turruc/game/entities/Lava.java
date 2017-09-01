@@ -35,18 +35,7 @@ public class Lava extends GameObject {
 
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
-		if (false) {
-			if (gm.getPlayer().isSlow()) {
-				animationSpeed = slowAnimationSpeed;
-			} else {
-				animationSpeed = normalAnimationSpeed;
-			}
-
-			anim += dt * animationSpeed;
-			if (anim > 4) {
-				anim = 0;
-			}
-		}
+		//IF FALSE? IFFFFF FALSE?!?!?!?!?
 	}
 
 	@Override
