@@ -32,6 +32,12 @@ public class GameManager extends AbstractGame {
 	private ImageTile lava;
 	private Player player;
 
+	private int normalAnimationSpeed = 7;
+	private int slowAnimationSpeed = normalAnimationSpeed / GameObject.slowMotion;
+	private int animationSpeed = normalAnimationSpeed;
+
+	private float anim = 0;
+
 	public GameManager() {
 		player = new Player(5, 5);
 		getObjects().add(player);
@@ -69,13 +75,22 @@ public class GameManager extends AbstractGame {
 	public void render(GameContainer gc, Renderer r) {
 		camera.render(r);
 
+		if (getPlayer().isSlow()) {
+			animationSpeed = slowAnimationSpeed;
+		} else {
+			animationSpeed = normalAnimationSpeed;
+		}
+
+		anim += gc.getDt() * animationSpeed;
+		anim %= 4;
+
 		// Start of drawing map
 		r.drawFillRect(0, 0, levelW * TS, levelH * TS, 0xff488Aff);
 		// r.drawImage(background, 0, 0);
 
 		for (int y = 0; y < levelH; y++) {
 			for (int x = 0; x < levelW; x++) {
-				//drawing normal tileset (dirt, cave, etc)
+				// drawing normal tileset (dirt, cave, etc)
 				if (collision[x + y * levelW] == 1) {
 					if (y != 0 && y != levelH - 1 && x != 0 && x != levelW) {
 						if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] >= 1) {
@@ -137,19 +152,20 @@ public class GameManager extends AbstractGame {
 						}
 					}
 				}
-				//end of drawing normal tileset
-				
-				//Drawing lava
+				// end of drawing normal tileset
+
+				// Drawing lava
 				if (collision[x + y * levelW] == 3) {
 					if (collision[x + (y - 1) * levelW] == 3) {
-						r.drawImageTile(lava, x * TS, y * TS, 0, 1); // none
+						r.drawImageTile(lava, x * TS, y * TS, (int) anim, 1); // none
 					} else {
-						r.drawImageTile(lava, x * TS, y * TS, 0, 0); // up
+						r.drawImageTile(lava, x * TS, y * TS, (int) anim, 0); // up
+
 					}
 
 				}
-				//end of drawing lava
-				
+				// end of drawing lava
+
 				// end of drawing map
 			}
 		}
