@@ -15,6 +15,7 @@ import com.turruc.game.entities.Player;
 import com.turruc.game.entities.ResourceBall;
 import com.turruc.game.entities.Turret;
 
+
 public class GameManager extends AbstractGame {
 	private static GameContainer gc;
 
