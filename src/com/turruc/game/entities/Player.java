@@ -18,8 +18,8 @@ public class Player extends GameObject {
 	private float offX, offY;
 
 	private float normalSpeed = 180;
-	private float slowSpeed = 200 / slowMotion;
-	private float speed = 200;
+	private float slowSpeed = normalSpeed / slowMotion;
+	private float speed = normalSpeed;
 
 	private float fallDistance = 0;
 	private float normalFallSpeed = 20;
@@ -193,29 +193,27 @@ public class Player extends GameObject {
 			attacking = true;
 			vshh.play();
 			if (direction == 0) {
-				if (gm.getCollisionNum(tileX, tileY) > 1 || gm.getCollisionNum(tileX + 1, tileY) > 1) {
 					for (int i = 0; i < GameManager.getObjects().size(); i++) {
-						if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) {
-							if (Math.abs(posX + GameManager.TS - GameManager.getObjects().get(i).getPosX()) <= 32 && Math.abs(posY - GameManager.getObjects().get(i).getPosY()) <= 32) {
+						if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
+							if (checkContact(this.posX + this.width/2, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
 								GameManager.getObjects().get(i).setDead(true);
 								break;
 								// i = gm.getObjects().size();
 							}
 						}
-					}
+					
 				}
 			} else if (direction == 1) {
-				if (gm.getCollisionNum(tileX, tileY) > 1 || gm.getCollisionNum(tileX - 1, tileY) > 1) {
-					for (int i = 0; i < GameManager.getObjects().size(); i++) {
-						if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) {
-							if (Math.abs(posX - GameManager.TS - GameManager.getObjects().get(i).getPosX()) <= 32 && Math.abs(posY - GameManager.getObjects().get(i).getPosY()) <= 32) {
-								GameManager.getObjects().get(i).setDead(true);
-								break;
-								// i = gm.getObjects().size();
-							}
+				for (int i = 0; i < GameManager.getObjects().size(); i++) {
+					if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
+						if (checkContact(this.posX - this.width/2, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
+							GameManager.getObjects().get(i).setDead(true);
+							break;
+							// i = gm.getObjects().size();
 						}
 					}
-				}
+				
+			}
 			}
 		}
 		// end melee
@@ -451,6 +449,7 @@ public class Player extends GameObject {
 		this.offX = (int) (posX % GameManager.TS);
 		this.offY = (int) (posY % GameManager.TS);
 	}
+
 	
 	public void setDead(boolean dead) {
 		this.dead = dead;

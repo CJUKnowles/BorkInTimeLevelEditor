@@ -13,6 +13,7 @@ Level Design Guide
 			-Alpha 255 (0xffff0000) Gives 100 mana, Alpha 155 (0x9bff0000) Gives 0 mana
 			-Anything below 155 will subtract mana
 		Yellow: Lava 0xffffff00
+		Cyan: meleeEnemy 0xff00ffff
 		Other: Air 
 		
 	-Turrets will automatically attach to the nearest surface

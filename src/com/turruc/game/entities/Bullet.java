@@ -7,8 +7,7 @@ import com.turruc.game.GameManager;
 
 public class Bullet extends GameObject {
 	private Image bullet = new Image("/bullet.png");
-	
-	
+
 	private int tileX, tileY;
 	private float offX, offY;
 	private float normalSpeed = 400; // 400
@@ -17,7 +16,9 @@ public class Bullet extends GameObject {
 	private int size = 8; // width/height of bullet
 	double xVelocity;
 	double yVelocity;
-	
+
+	private int damage = 50;
+
 	private double angle = 0;
 	private double angle2 = 0;
 
@@ -29,24 +30,23 @@ public class Bullet extends GameObject {
 		this.tag = EntityType.bullet;
 		posX = tileX * GameManager.TS + offX;
 		posY = tileY * GameManager.TS + offY;
-		
+
 		angle = Math.atan2(mouseX - posX, mouseY - posY);
 		angle2 = Math.atan2(mouseY - posY, mouseX - posX);
 	}
 
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
-		
-		
+
 		if (gm.getPlayer().isSlow()) {
 			speed = slowSpeed;
 		} else {
 			speed = normalSpeed;
 		}
-		
+
 		this.xVelocity = speed * Math.cos(angle);
 		this.yVelocity = speed * Math.sin(angle);
-		
+
 		offY += xVelocity * dt;
 		offX += yVelocity * dt;
 
@@ -73,18 +73,20 @@ public class Bullet extends GameObject {
 
 		if (gm.getCollision(tileX, tileY)) {
 			this.dead = true;
+		}
 
-			if (gm.getCollisionNum(tileX, tileY) == 2) {
-				for (int i = 0; i < GameManager.getObjects().size(); i++) {
-					if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) {
-						if (Math.abs(posX - GameManager.getObjects().get(i).getPosX()) <= 32 && Math.abs(posY - GameManager.getObjects().get(i).getPosY()) <= 32) {
-							GameManager.getObjects().get(i).setDead(true);
-							break;
-							// i = gm.getObjects().size();
-						}
-					}
+		// if (gm.getCollisionNum(tileX, tileY) == 2) {
+		for (int i = 0; i < GameManager.getObjects().size(); i++) {
+			if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
+				if (checkContact(this.posX, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
+					if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) GameManager.getObjects().get(i).setDead(true); //kill turret
+					if (GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) ((MeleeEnemy) GameManager.getObjects().get(i)).hit(damage); //damage meleeEnemy
+					this.dead = true;
+					break;
+					// i = gm.getObjects().size();
 				}
 			}
+			// }
 		}
 
 		posX = tileX * GameManager.TS + offX;

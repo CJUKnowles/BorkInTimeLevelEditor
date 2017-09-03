@@ -15,6 +15,13 @@ public abstract class GameObject {
 
 	public abstract void render(GameContainer gc, Renderer r);
 
+	public boolean checkContact(float posX, float posY, float posX2, float posY2) {
+		if (Math.abs((posX + GameManager.TS / 2) - (posX2 + GameManager.TS / 2)) < GameManager.TS && Math.abs((posY + GameManager.TS / 2) - (posY2 + GameManager.TS / 2)) < GameManager.TS) {
+			return true;
+		}
+		return false;
+	}
+	
 	public EntityType getTag() {
 		return tag;
 	}

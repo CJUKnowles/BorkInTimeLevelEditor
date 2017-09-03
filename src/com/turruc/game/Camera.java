@@ -33,11 +33,12 @@ public class Camera {
 			scrollSpeed = normalScrollSpeed;
 		}
 
-		// float targetX = (target.getPosX() + target.getWidth() / 2) - gc.getWidth() / 2;
-		float targetY = (target.getPosY() + target.getHeight() / 2) - gc.getHeight() / 2;
+		float targetX = (target.getPosX() + target.getWidth() / 2) - gc.getWidth() / 2;
+		offX -= dt * (int) (offX - targetX) * camSpeed;
 
-		// offX -= dt * (int) (offX - targetX) * camSpeed;
-		offX += scrollSpeed;
+		float targetY = (target.getPosY() + target.getHeight() / 2) - gc.getHeight() / 2;
+		
+		//offX += scrollSpeed;
 		offY -= dt * (int) (offY - targetY) * camSpeed;
 
 		if (offX < 0) {

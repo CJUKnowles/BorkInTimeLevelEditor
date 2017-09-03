@@ -1,5 +1,6 @@
 package com.turruc.game;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import com.turruc.engine.AbstractGame;
@@ -10,10 +11,11 @@ import com.turruc.engine.gfx.ImageTile;
 import com.turruc.engine.gfx.Light;
 import com.turruc.game.entities.EntityType;
 import com.turruc.game.entities.GameObject;
-import com.turruc.game.entities.Lava;
+import com.turruc.game.entities.MeleeEnemy;
 import com.turruc.game.entities.Player;
 import com.turruc.game.entities.ResourceBall;
 import com.turruc.game.entities.Turret;
+
 
 public class GameManager extends AbstractGame {
 	private static GameContainer gc;
@@ -32,6 +34,12 @@ public class GameManager extends AbstractGame {
 	private ImageTile lava;
 	private Player player;
 
+	private int normalAnimationSpeed = 7;
+	private int slowAnimationSpeed = normalAnimationSpeed / GameObject.slowMotion;
+	private int animationSpeed = normalAnimationSpeed;
+
+	private float anim = 0;
+
 	public GameManager() {
 		player = new Player(5, 5);
 		getObjects().add(player);
@@ -43,6 +51,11 @@ public class GameManager extends AbstractGame {
 		lava = new ImageTile("/lava.png", 32, 32);
 	}
 
+	public static void main(String[] args) {
+		gc = new GameContainer(new GameManager());
+		gc.start();
+	}
+	
 	@Override
 	public void init(GameContainer gc) {
 		gc.getRenderer().setAmbientColor(-1);
@@ -64,13 +77,22 @@ public class GameManager extends AbstractGame {
 	public void render(GameContainer gc, Renderer r) {
 		camera.render(r);
 
+		if (getPlayer().isSlow()) {
+			animationSpeed = slowAnimationSpeed;
+		} else {
+			animationSpeed = normalAnimationSpeed;
+		}
+
+		anim += gc.getDt() * animationSpeed;
+		anim %= 4;
+
 		// Start of drawing map
 		r.drawFillRect(0, 0, levelW * TS, levelH * TS, 0xff488Aff);
 		// r.drawImage(background, 0, 0);
 
 		for (int y = 0; y < levelH; y++) {
 			for (int x = 0; x < levelW; x++) {
-				//drawing normal tileset (dirt, cave, etc)
+				// drawing normal tileset (dirt, cave, etc)
 				if (collision[x + y * levelW] == 1) {
 					if (y != 0 && y != levelH - 1 && x != 0 && x != levelW) {
 						if (collision[x + (y - 1) * levelW] <= 0 && collision[(x - 1) + y * levelW] >= 1 && collision[x + (y + 1) * levelW] >= 1 && collision[(x + 1) + y * levelW] >= 1) {
@@ -132,19 +154,20 @@ public class GameManager extends AbstractGame {
 						}
 					}
 				}
-				//end of drawing normal tileset
-				
-				//Drawing lava
+				// end of drawing normal tileset
+
+				// Drawing lava
 				if (collision[x + y * levelW] == 3) {
 					if (collision[x + (y - 1) * levelW] == 3) {
-						r.drawImageTile(lava, x * TS, y * TS, 0, 1); // none
+						r.drawImageTile(lava, x * TS, y * TS, (int) anim, 1); // none
 					} else {
-						r.drawImageTile(lava, x * TS, y * TS, 0, 0); // up
+						r.drawImageTile(lava, x * TS, y * TS, (int) anim, 0); // up
+
 					}
 
 				}
-				//end of drawing lava
-				
+				// end of drawing lava
+
 				// end of drawing map
 			}
 		}
@@ -154,10 +177,10 @@ public class GameManager extends AbstractGame {
 
 		}
 
-		r.drawText("Left Click: Shoot", (int) camera.getOffX(), 32, 0xffffffff);
-		r.drawText("Right Click: Melee", (int) camera.getOffX(), 48, 0xffffffff);
-		r.drawText("Shift: Teleport", (int) camera.getOffX(), 64, 0xffffffff);
-		r.drawText("Ctrl: Slow Motion", (int) camera.getOffX(), 80, 0xffffffff);
+		r.drawText("Left Click: Shoot", (int) camera.getOffX(), 32, Color.WHITE.getRGB());
+		r.drawText("Right Click: Melee", (int) camera.getOffX(), 48, Color.WHITE.getRGB());
+		r.drawText("Shift: Teleport", (int) camera.getOffX(), 64, Color.WHITE.getRGB());
+		r.drawText("Ctrl: Slow Motion", (int) camera.getOffX(), 80, Color.WHITE.getRGB());
 
 	}
 
@@ -171,22 +194,22 @@ public class GameManager extends AbstractGame {
 		for (int y = 0; y < levelImage.getH(); y++) {
 			for (int x = 0; x < levelImage.getW(); x++) {
 
-				if (levelImage.getP()[x + y * levelImage.getW()] == 0xffff00ff) {// Pink
+				if (levelImage.getP()[x + y * levelImage.getW()] == Color.PINK.getRGB()) {
 					collision[x + y * levelImage.getW()] = -100;// player
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff000000) {// black
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.BLACK.getRGB()) {// black
 					collision[x + y * levelImage.getW()] = 1; // collision block
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffffffff) {// white
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.WHITE.getRGB()) {// white
 					collision[x + y * levelImage.getW()] = 0;// air
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ff00) {// green
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.GREEN.getRGB()) {// green
 					collision[x + y * levelImage.getW()] = 2;// turret
-				} else if ((levelImage.getP()[x + y * levelImage.getW()] | 0xff000000) == 0xffff0000) {// red // |
-																										// 0xff000000
-																										// removes alpha
+				} else if ((levelImage.getP()[x + y * levelImage.getW()] | 0xff000000) == Color.RED.getRGB()) {// red // | 0xff000000 removes alpha
 					collision[x + y * levelImage.getW()] = -1;// health ball
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff0000ff) {// blue
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.BLUE.getRGB()) {// blue
 					collision[x + y * levelImage.getW()] = -2;// mana ball
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffffff00) {// yellow
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.YELLOW.getRGB()) {// yellow
 					collision[x + y * levelImage.getW()] = 3;// lava
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ffff) {// teal
+					getObjects().add(new MeleeEnemy(x, y)); //meleeEnemy
 				}
 			}
 		}
@@ -227,25 +250,11 @@ public class GameManager extends AbstractGame {
 	}
 
 	public boolean getCollision(int x, int y) {
-		if (x < 0 || x >= levelW || y < 0 || y >= levelH) {
-			return true;
-		}
-
-		if (collision[x + y * levelW] == 1 || collision[x + y * levelW] == 2) {
-			return true;
-		}
-
-		return false;
+		return x < 0 || x >= levelW || y < 0 || y >= levelH || collision[x + y * levelW] == 1 || collision[x + y * levelW] == 2;
 	}
 
 	public int getCollisionNum(int x, int y) {
 		return collision[x + y * levelW];
-	}
-
-	public static void main(String[] args) {
-		gc = new GameContainer(new GameManager());
-
-		gc.start();
 	}
 
 	public Camera getCamera() {

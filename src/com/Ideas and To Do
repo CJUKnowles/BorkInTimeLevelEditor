@@ -4,14 +4,6 @@ Ideas / To Do
 
 -Win condition
 	-Win if the player reaches a certain color of the level, for now winning will just print something on the screen
--Enemy health
-	-Add a system for health in turrets, even if they only have one
-	-To be reused in code for other enemies
--Melee Enemies
-	-Will follow same gravity/jumping rules as the player
-	-Will follow the player
-	-Will deal ticking damage within a certain range
-	-Impossible to kill with melee without taking damage
 -Cannons/Static Turrets
 	-Will not fire towards player, but in a set direction and pace
 	-Will fire different projectiles from normal turrets
