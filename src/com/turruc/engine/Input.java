@@ -23,7 +23,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	private int mouseX, mouseY;
 	private int scroll; // -1 for scrolling up, 0 for doing nothing, 1 for scrolling down
 
-	public Input(GameContainer gc) {//bork
+	public Input(GameContainer gc) {
 		this.gc = gc;
 		mouseX = 0;
 		mouseY = 0;
