@@ -16,7 +16,6 @@ public class Bullet extends GameObject {
 	private int size = 8; // width/height of bullet
 	double xVelocity;
 	double yVelocity;
-
 	private int damage = 50;
 
 	private double angle = 0;
@@ -75,6 +74,7 @@ public class Bullet extends GameObject {
 			this.dead = true;
 		}
 
+
 		// if (gm.getCollisionNum(tileX, tileY) == 2) {
 		for (int i = 0; i < GameManager.getObjects().size(); i++) {
 			if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
@@ -85,9 +85,21 @@ public class Bullet extends GameObject {
 					break;
 					// i = gm.getObjects().size();
 				}
+				}
+		}
+			if (gm.getCollisionNum(tileX, tileY) == 2) {
+				for (int i = 0; i < GameManager.getObjects().size(); i++) {
+					if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) {
+						if (Math.abs(posX - GameManager.getObjects().get(i).getPosX()) <= 32 && Math.abs(posY - GameManager.getObjects().get(i).getPosY()) <= 32) {
+							GameManager.getObjects().get(i).setDead(true);
+							break;
+						}
+					}
+
+				}
 			}
 			// }
-		}
+		
 
 		posX = tileX * GameManager.TS + offX;
 		posY = tileY * GameManager.TS + offY;

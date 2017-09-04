@@ -202,7 +202,9 @@ public class GameManager extends AbstractGame {
 					collision[x + y * levelImage.getW()] = 0;// air
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.GREEN.getRGB()) {// green
 					collision[x + y * levelImage.getW()] = 2;// turret
-				} else if ((levelImage.getP()[x + y * levelImage.getW()] | 0xff000000) == Color.RED.getRGB()) {// red // | 0xff000000 removes alpha
+				} else if ((levelImage.getP()[x + y * levelImage.getW()] | 0xff000000) == Color.RED.getRGB()) {// red // |
+																										// 0xff000000
+																										// removes alpha
 					collision[x + y * levelImage.getW()] = -1;// health ball
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.BLUE.getRGB()) {// blue
 					collision[x + y * levelImage.getW()] = -2;// mana ball
