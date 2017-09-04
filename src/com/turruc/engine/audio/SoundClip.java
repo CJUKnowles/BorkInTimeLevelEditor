@@ -12,7 +12,7 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class SoundClip {
+public class SoundClip {//test
 	private Clip clip = null;
 	private FloatControl gainControl;
 
