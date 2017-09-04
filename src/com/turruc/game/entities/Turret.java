@@ -127,7 +127,7 @@ public class Turret extends GameObject {
 	}
 
 	public boolean checkLOS(float x0, float y0, float x1, float y1) {
-		LOSBullet check = new LOSBullet((int) targetX, (int) targetY, tileX, tileY, offX, offY, GameManager.getGc(), gm, GameManager.getGc().getDt(), range, true);
+		LOSBullet check = new LOSBullet((int) targetX, (int) targetY, tileX, tileY, offX, offY, GameManager.getGc(), gm, GameManager.getGc().getDt(), range, true, false);
 		return check.LOS;
 	}
 

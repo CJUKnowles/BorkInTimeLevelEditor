@@ -15,7 +15,7 @@ public class LOSBullet extends GameObject {
 	private float lastClearPosY = 0;
 
 	
-	public LOSBullet(int targetX, int targetY, int tileX, int tileY, float offX, float offY, GameContainer gc, GameManager gm, float dt, int range, boolean kill) {
+	public LOSBullet(int targetX, int targetY, int tileX, int tileY, float offX, float offY, GameContainer gc, GameManager gm, float dt, int range, boolean kill, boolean ignoreWalls) {
 		this.tag = EntityType.LOSBullet;
 		posX = tileX * GameManager.TS + offX;
 		posY = tileY * GameManager.TS + offY;
@@ -49,6 +49,13 @@ public class LOSBullet extends GameObject {
 				offX += GameManager.TS;
 			}
 
+			if(ignoreWalls) {
+				if (range == 0) {
+					LOS = false;
+					return;
+				}
+			} else {
+			
 			if (gm.getCollisionNum(tileX, tileY) == 1 || range == 0) {
 				if(kill) {
 					this.dead = true;					
@@ -56,7 +63,7 @@ public class LOSBullet extends GameObject {
 				LOS = false;
 				return;
 			}
-			
+			}
 			if (gm.getCollisionNum(tileX, tileY) == 0 && !kill) {
 				System.out.println("I am the biggest meme");
 				this.lastClearPosX = this.posX;

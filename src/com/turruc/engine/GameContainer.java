@@ -51,7 +51,7 @@ public class GameContainer implements Runnable {
 		game.init(this);
 
 		while (running) {
-			render = false; // mark as true to uncap framerate, may screw with some calculations, should be
+			render = true; // mark as true to uncap framerate, may screw with some calculations, should be
 							// false for final version
 			firstTime = System.nanoTime() / 1000000000.0;
 			passedTime = firstTime - lastTime;

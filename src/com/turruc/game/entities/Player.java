@@ -192,21 +192,13 @@ public class Player extends GameObject {
 		if (gc.getInput().isButtonDown(3) && !attacking) {
 			attacking = true;
 			vshh.play();
+		}
+		
+		if(attacking) {
 			if (direction == 0) {
-					for (int i = 0; i < GameManager.getObjects().size(); i++) {
-						if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
-							if (checkContact(this.posX + this.width/2, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
-								GameManager.getObjects().get(i).setDead(true);
-								break;
-								// i = gm.getObjects().size();
-							}
-						}
-					
-				}
-			} else if (direction == 1) {
 				for (int i = 0; i < GameManager.getObjects().size(); i++) {
 					if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
-						if (checkContact(this.posX - this.width/2, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
+						if (checkContact(this.posX + 20, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
 							GameManager.getObjects().get(i).setDead(true);
 							break;
 							// i = gm.getObjects().size();
@@ -214,7 +206,18 @@ public class Player extends GameObject {
 					}
 				
 			}
-			}
+		} else if (direction == 1) {
+			for (int i = 0; i < GameManager.getObjects().size(); i++) {
+				if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret) || GameManager.getObjects().get(i).getTag().equals(EntityType.meleeEnemy)) {
+					if (checkContact(this.posX - 20, this.posY, GameManager.getObjects().get(i).getPosX(), GameManager.getObjects().get(i).getPosY())) {
+						GameManager.getObjects().get(i).setDead(true);
+						break;
+						// i = gm.getObjects().size();
+					}
+				}
+			
+		}
+		}
 		}
 		// end melee
 

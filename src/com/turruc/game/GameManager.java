@@ -209,7 +209,7 @@ public class GameManager extends AbstractGame {
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.YELLOW.getRGB()) {// yellow
 					collision[x + y * levelImage.getW()] = 3;// lava
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ffff) {// teal
-					getObjects().add(new MeleeEnemy(x, y)); //meleeEnemy
+					getObjects().add(new MeleeEnemy(this, x, y)); //meleeEnemy
 				}
 			}
 		}
