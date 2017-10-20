@@ -9,7 +9,7 @@ public class Camera {
 	private float offX, offY;
 	private EntityType targetTag;
 	private GameObject target = null;
-	private int camSpeed = 7;
+	private float camSpeed = 7;
 	private float backgroundSpeed = (float) .7;
 	private float midgroundSpeed = (float) .5;
 	private float normalScrollSpeed = (float) 2;
@@ -29,19 +29,15 @@ public class Camera {
 			return;
 		}
 
-		if (gm.getPlayer().isSlow()) {
-			scrollSpeed = slowScrollSpeed;
-		} else {
 			scrollSpeed = normalScrollSpeed;
-		}
 
 		float targetX = (target.getPosX() + target.getWidth() / 2) - gc.getWidth() / 2;
-		offX -= dt * (int) (offX - targetX) * camSpeed;
+		offX -= dt * (offX - targetX) * camSpeed;
 
 		float targetY = (target.getPosY() + target.getHeight() / 2) - gc.getHeight() / 2;
 		
 		//offX += scrollSpeed;
-		offY -= dt * (int) (offY - targetY) * camSpeed;
+		offY -= dt * (offY - targetY) * camSpeed;
 
 		if (offX < 0) {
 			offX = 0;
@@ -62,8 +58,8 @@ public class Camera {
 	}
 
 	public void render(Renderer r) {
-		r.setCamX((int) offX);
-		r.setCamY((int) offY);
+		r.setCamX(offX);
+		r.setCamY(offY);
 	}
 
 	public float getOffX() {

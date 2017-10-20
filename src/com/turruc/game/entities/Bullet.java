@@ -37,11 +37,7 @@ public class Bullet extends GameObject {
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
 
-		if (gm.getPlayer().isSlow()) {
-			speed = slowSpeed;
-		} else {
 			speed = normalSpeed;
-		}
 
 		this.xVelocity = speed * Math.cos(angle);
 		this.yVelocity = speed * Math.sin(angle);

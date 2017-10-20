@@ -37,12 +37,7 @@ public class EnemyBullet extends GameObject {
 
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
-		if (gm.getPlayer().isSlow()) {
-
-			speed = slowSpeed;
-		} else {
 			speed = normalSpeed;
-		}
 
 		this.xVelocity = speed * Math.cos(angle);
 		this.yVelocity = speed * Math.sin(angle);
@@ -75,15 +70,6 @@ public class EnemyBullet extends GameObject {
 			this.dead = true;
 		}
 
-		for (int i = 0; i < GameManager.getObjects().size(); i++) {
-			if (GameManager.getObjects().get(i).getTag().equals(EntityType.player)) {
-				if (Math.abs(posX - GameManager.getObjects().get(i).getPosX() - 16) <= 16 && Math.abs(posY - GameManager.getObjects().get(i).getPosY() - 16) <= 16) {
-					this.dead = true;
-					((Player) GameManager.getObjects().get(i)).hit(20);
-					break;
-				}
-			}
-		}
 
 		posX = tileX * GameManager.TS + offX;
 		posY = tileY * GameManager.TS + offY;

@@ -1,7 +1,6 @@
 package com.turruc.game;
 
 import java.awt.Color;
-import java.io.File;
 import java.util.ArrayList;
 
 import com.turruc.engine.AbstractGame;
@@ -9,11 +8,9 @@ import com.turruc.engine.GameContainer;
 import com.turruc.engine.Renderer;
 import com.turruc.engine.gfx.Image;
 import com.turruc.engine.gfx.ImageTile;
-import com.turruc.engine.gfx.Light;
 import com.turruc.game.entities.EntityType;
 import com.turruc.game.entities.GameObject;
 import com.turruc.game.entities.MeleeEnemy;
-import com.turruc.game.entities.Player;
 import com.turruc.game.entities.ResourceBall;
 import com.turruc.game.entities.Turret;
 
@@ -36,7 +33,6 @@ public class GameManager extends AbstractGame {
 	private Image platform;
 	private Image ladder;
 	private ImageTile lava;
-	private Player player;
 
 	private int normalAnimationSpeed = 7;
 	private int slowAnimationSpeed = normalAnimationSpeed / GameObject.slowMotion;
@@ -45,11 +41,9 @@ public class GameManager extends AbstractGame {
 	private float anim = 0;
 
 	public GameManager() {
-		player = new Player(8, 8);
-		getObjects().add(player);
 		level = new Image("/level.png");
 		loadLevel("/level.png");
-		camera = new Camera(EntityType.player);
+		camera = new Camera(EntityType.CameraFollow);
 		dirt = new ImageTile("/dirtTileset.png", 32, 32);
 		background = new Image("/background.png");
 		midground = new Image("/midground.png");
@@ -84,21 +78,17 @@ public class GameManager extends AbstractGame {
 	public void render(GameContainer gc, Renderer r) {
 		camera.render(r);
 
-		if (getPlayer().isSlow()) {
-			animationSpeed = slowAnimationSpeed;
-		} else {
 			animationSpeed = normalAnimationSpeed;
-		}
 
 		anim += gc.getDt() * animationSpeed;
 		anim %= 4;
 
 		// Start of drawing map
-		for(int i = 0; i < (levelW * 32)/background.getW(); i++) { //add 1 to i < x if drawing one too few backgrounds
+		for(int i = 0; i < (levelW * 32)/background.getW() * 2; i++) { //add 1 to i < x if drawing one too few backgrounds
 			r.drawImage(background, (int) (i * background.getW() + camera.getOffX() * camera.getBackgroundSpeed()), 0);
 		}
 
-		for(int i = 0; i < (levelW * 32)/background.getW(); i++) { //add 1 to i < x if drawing one too few backgrounds
+		for(int i = 0; i < (levelW * 32)/background.getW() * 2; i++) { //add 1 to i < x if drawing one too few backgrounds
 			r.drawImage(midground, (int) (i * midground.getW() + camera.getOffX() * camera.getMidgroundSpeed()), 0);
 		}
 
@@ -108,7 +98,7 @@ public class GameManager extends AbstractGame {
 				if (collision[x + y * levelW] == 1) {
 					if (y != 0 && y != levelH - 1 && x != 0 && x != levelW) {
 						if (!getContact(x, y - 1) && getContact(x - 1, y) && getCollision(x, y + 1) && getContact(x + 1, y)) {
-							dirt.getTileImage(0, 0).setLightBlock(Light.FULL);
+							//dirt.getTileImage(0, 0).setLightBlock(Light.FULL);
 							r.drawImageTile(dirt, x * TS, y * TS, 0, 0); // up
 						} else if (getContact(x, y- 1) && !getContact(x - 1, y) && getCollision(x, y + 1) && getContact(x + 1, y)) {
 							r.drawImageTile(dirt, x * TS, y * TS, 1, 0); // left
@@ -247,7 +237,7 @@ public class GameManager extends AbstractGame {
 		for (int y = 0; y < levelH; y++) {
 			for (int x = 0; x < levelW; x++) {
 				if (collision[x + y * levelW] == -100) { // player
-					player.moveTo(x * TS, y * TS);
+					//player.moveTo(x * TS, y * TS);
 				}
 
 				if (collision[x + y * levelW] == 2) { // turret
@@ -301,10 +291,6 @@ public class GameManager extends AbstractGame {
 
 	public int getLevelH() {
 		return levelH;
-	}
-
-	public Player getPlayer() {
-		return player;
 	}
 
 	public static ArrayList<GameObject> getObjects() {

@@ -1,6 +1,7 @@
 package com.turruc.engine.gfx;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -16,9 +17,8 @@ public class Image {
 	public Image(String path) {
 		this.path = path;
 		BufferedImage image = null;
-
 		try {
-			image = ImageIO.read(Image.class.getResourceAsStream(path));
+			image = ImageIO.read(java.awt.Image.class.getResourceAsStream(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
