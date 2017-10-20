@@ -8,6 +8,7 @@ import com.turruc.engine.GameContainer;
 import com.turruc.engine.Renderer;
 import com.turruc.engine.gfx.Image;
 import com.turruc.engine.gfx.ImageTile;
+import com.turruc.game.entities.CameraFollow;
 import com.turruc.game.entities.EntityType;
 import com.turruc.game.entities.GameObject;
 import com.turruc.game.entities.MeleeEnemy;
@@ -78,7 +79,7 @@ public class GameManager extends AbstractGame {
 	public void render(GameContainer gc, Renderer r) {
 		camera.render(r);
 
-			animationSpeed = normalAnimationSpeed;
+		animationSpeed = normalAnimationSpeed;
 
 		anim += gc.getDt() * animationSpeed;
 		anim %= 4;
@@ -206,6 +207,8 @@ public class GameManager extends AbstractGame {
 		levelW = levelImage.getW();
 		levelH = levelImage.getH();
 		collision = new int[levelW * levelH];
+		
+		getObjects().add(new CameraFollow(10, 10));
 
 		for (int y = 0; y < levelImage.getH(); y++) {
 			for (int x = 0; x < levelImage.getW(); x++) {

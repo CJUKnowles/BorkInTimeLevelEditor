@@ -123,5 +123,13 @@ public class MeleeEnemy extends GameObject {
 	public void setHealth(int health) {
 		this.health = health;
 	}
+	
+	public float getTileX() {
+		return tileX;
+	}
+
+	public float getTileY() {
+		return tileY;
+	}
 
 }

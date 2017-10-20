@@ -51,4 +51,12 @@ public class ResourceBall extends GameObject {
 		this.dead = dead;
 		woosh.play();
 	}
+	
+	public float getTileX() {
+		return tileX;
+	}
+
+	public float getTileY() {
+		return tileY;
+	}
 }

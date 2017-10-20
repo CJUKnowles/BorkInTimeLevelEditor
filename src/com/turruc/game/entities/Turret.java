@@ -1,7 +1,5 @@
 package com.turruc.game.entities;
 
-import java.util.Random;
-
 import com.turruc.engine.GameContainer;
 import com.turruc.engine.Renderer;
 import com.turruc.engine.audio.SoundClip;
@@ -17,30 +15,14 @@ public class Turret extends GameObject {
 
 	private int tileX, tileY;
 	private float offX, offY;
-	private int normalFireRate = 70;
-	private int slowFireRate = normalFireRate * slowMotion;
-	private int fireRate = 70; // Smaller = faster firerate //70
-	private int timeUntilNextShot = fireRate;
 	private GameManager gm;
 	private double angle = 0;
 	private double angle2;
-	private double targetAngle;
 	private int range = 60; // 5 per tile roughly
-	private double normalTurnSpeed = 5;
-	private double slowTurnSpeed = normalTurnSpeed / slowMotion;
-	private double turnSpeed = normalTurnSpeed;
-
-	private boolean canShoot = false;
-	private int accuracy = 10; //the closer to zero, the more on target the turret has to be before it fires
 	
-	private int manaReward = 20;
-	
-	private SoundClip pew;
 	private SoundClip boof;
 	
 	public Turret(GameManager gm, int posX, int posY) {
-		Random random = new Random();
-		normalFireRate += random.nextInt(20) - 10;
 		this.tag = EntityType.turret;
 		this.tileX = posX;
 		this.tileY = posY;
@@ -52,13 +34,20 @@ public class Turret extends GameObject {
 		this.height = 32;
 		this.gm = gm;
 		
-		pew = new SoundClip("/audio/pew.wav");
 		boof = new SoundClip("/audio/boof.wav");
 	}
 
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
-
+		if (gm.getCollisionNum(tileX, tileY + 1) == 1) { // below
+			angle2 = 0;
+		} else if (gm.getCollisionNum(tileX + 1, tileY) == 1) { // right
+			angle2 = 270;
+		} else if (gm.getCollisionNum(tileX - 1, tileY) == 1) { // left
+			angle2 = 90;
+		} else if (gm.getCollisionNum(tileX, tileY - 1) == 1) { // above
+			angle2 = 180;
+		}
 		
 	}
 
@@ -74,9 +63,18 @@ public class Turret extends GameObject {
 	}
 
 	public void setDead(boolean dead) {
-		gm.getCollision()[(((int) this.tileY) * gm.getLevelW()) + (int) this.tileX] = 0;
+		gm.getCollision()[ (this.tileY * gm.getLevelW()) + (int) this.tileX] = 0;
 		this.dead = dead;
 		boof.play();
 	}
+	
+	public float getTileX() {
+		return tileX;
+	}
+
+	public float getTileY() {
+		return tileY;
+	}
+
 
 }

@@ -37,7 +37,7 @@ public class Bullet extends GameObject {
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
 
-			speed = normalSpeed;
+		speed = normalSpeed;
 
 		this.xVelocity = speed * Math.cos(angle);
 		this.yVelocity = speed * Math.sin(angle);
@@ -81,21 +81,21 @@ public class Bullet extends GameObject {
 					break;
 					// i = gm.getObjects().size();
 				}
-				}
-		}
-			if (gm.getCollisionNum(tileX, tileY) == 2) {
-				for (int i = 0; i < GameManager.getObjects().size(); i++) {
-					if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) {
-						if (Math.abs(posX - GameManager.getObjects().get(i).getPosX()) <= 32 && Math.abs(posY - GameManager.getObjects().get(i).getPosY()) <= 32) {
-							GameManager.getObjects().get(i).setDead(true);
-							break;
-						}
-					}
-
-				}
 			}
-			// }
-		
+		}
+		if (gm.getCollisionNum(tileX, tileY) == 2) {
+			for (int i = 0; i < GameManager.getObjects().size(); i++) {
+				if (GameManager.getObjects().get(i).getTag().equals(EntityType.turret)) {
+					if (Math.abs(posX - GameManager.getObjects().get(i).getPosX()) <= 32 && Math.abs(posY - GameManager.getObjects().get(i).getPosY()) <= 32) {
+						GameManager.getObjects().get(i).setDead(true);
+						break;
+					}
+				}
+
+			}
+		}
+		// }
+
 
 		posX = tileX * GameManager.TS + offX;
 		posY = tileY * GameManager.TS + offY;
