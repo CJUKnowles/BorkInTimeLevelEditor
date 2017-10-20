@@ -4,18 +4,8 @@ Java game made for fun!
 
 ## Ideas and To-Do
 
-* colors may not be a perfect (0, 255, 0) forever, may need to have specific colors if I want to add extra features
-
 * Win condition
 	* Win if the player reaches a certain color of the level, for now winning will just print something on the screen
-* Enemy health
-	* Add a system for health in turrets, even if they only have one
-	* To be reused in code for other enemies
-* Melee Enemies
-	* Will follow same gravity/jumping rules as the player
-	* Will follow the player
-	* Will deal ticking damage within a certain range
-	* Impossible to kill with melee without taking damage
 * Cannons/Static Turrets
 	* Will not fire towards player, but in a set direction and pace
 	* Will fire different projectiles from normal turrets
@@ -49,6 +39,7 @@ Java game made for fun!
 		* Alpha 255 (0xffff0000) Gives 100 mana, Alpha 155 (0x9bff0000) Gives 0 mana
 		* Anything below 155 will subtract mana
 	* Yellow: Lava 0xffffff00
+	* Brown: Platform 0xff963200
 	* Other: Air 
 		
 * Turrets will automatically attach to the nearest surface

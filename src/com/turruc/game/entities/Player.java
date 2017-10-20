@@ -44,7 +44,9 @@ public class Player extends GameObject {
 	private int teleportCost = 30;
 	private double slowMotionCost = 0.5;
 	private int slowMotionCooldown = 1; // in seconds
-
+	
+	private float ladderSpeed = (float) .5;
+	
 	private int normalAnimationSpeed = 10;
 	private int slowAnimationSpeed = normalAnimationSpeed / slowMotion;
 	private int animationSpeed = normalAnimationSpeed;
@@ -253,6 +255,20 @@ public class Player extends GameObject {
 		
 		// Beginning Jump and Gravity
 
+		//beginning ladder
+		if(gm.getCollisionNum((int) tileX, (int) tileY) == 5) {
+			fallSpeed = 0;
+			fallDistance = 0;
+			if(gc.getInput().isKey(KeyEvent.VK_W)) {
+				fallDistance += (jump * ladderSpeed);
+			} 
+			
+			if(gc.getInput().isKey(KeyEvent.VK_S)) {
+				fallDistance -= (jump * ladderSpeed);
+			}
+		}
+		//end ladder
+		
 		if(gc.getInput().isKey(KeyEvent.VK_S) && !ground) {
 			fallSpeed = fallSpeed * 3;  
 		}
