@@ -17,14 +17,14 @@ public class Player extends GameObject {
 	private int tileX, tileY;
 	private float offX, offY;
 
-	private float normalSpeed = 180;
+	private float normalSpeed = 200;
 	private float slowSpeed = normalSpeed / slowMotion;
 	private float speed = normalSpeed;
 
 	private float fallDistance = 0;
-	private float normalFallSpeed = 20;
+	private float normalFallSpeed = 25;
 	private float slowFallSpeed = normalFallSpeed / slowMotion;
-	private float fallSpeed = 20;
+	private float fallSpeed = normalFallSpeed;
 	private float jump = -10; // must be negative
 	private boolean ground = false;
 	private boolean groundLast = false;
@@ -96,12 +96,12 @@ public class Player extends GameObject {
 			boof.play();
 			// this.dead = true;
 			health = maxHealth;
-			this.posX = 64;
-			this.posX = 64;
+			this.posX = 64 * 2;
+			this.posX = 64 * 2;
 			this.offX = 0;
 			this.offX = 0;
-			this.tileX = 2;
-			this.tileY = 2;
+			this.tileX = 2 * 2;
+			this.tileY = 2 * 2;
 		}
 
 		// slow motion
@@ -250,8 +250,13 @@ public class Player extends GameObject {
 			}
 		}
 		// End left and right
-
+		
 		// Beginning Jump and Gravity
+
+		if(gc.getInput().isKey(KeyEvent.VK_S) && !ground) {
+			fallSpeed = fallSpeed * 3;  
+		}
+		
 		fallDistance += dt * fallSpeed;
 
 		if ((gc.getInput().isKeyDown(KeyEvent.VK_W) || gc.getInput().isKeyDown(KeyEvent.VK_SPACE)) && ground) {
@@ -275,12 +280,20 @@ public class Player extends GameObject {
 
 		if (fallDistance > 0) {
 
-			if ((gm.getCollision(tileX, tileY + 1) || gm.getCollision(tileX + (int) Math.signum((int) Math.abs(offX) > padding ? offX : 0), tileY + 1)) && offY > 0) {
+			if ((gm.getCollision(tileX, tileY + 1) || gm.getCollisionNum(tileX, tileY + 1) == 4 || gm.getCollision(tileX + (int) Math.signum((int) Math.abs(offX) > padding ? offX : 0), tileY + 1)) && offY > 0) {
 				fallDistance = 0;
 				offY = 0;
 				ground = true;
 			}
 		}
+		
+		
+		//fallSpeed = normalFallSpeed;
+		//Falling through platforms
+		if(ground && gc.getInput().isKeyDown(KeyEvent.VK_S) && gm.getCollisionNum(tileX, tileY + 1) == 4) {
+			moveTo(this.posX, this.posY + 17);
+		}
+		//End of falling through platforms
 		// End Jump and Gravity
 
 		// teleporting

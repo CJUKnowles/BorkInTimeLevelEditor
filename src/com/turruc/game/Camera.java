@@ -10,6 +10,8 @@ public class Camera {
 	private EntityType targetTag;
 	private GameObject target = null;
 	private int camSpeed = 7;
+	private float backgroundSpeed = (float) .7;
+	private float midgroundSpeed = (float) .5;
 	private float normalScrollSpeed = (float) 2;
 	private float slowScrollSpeed = normalScrollSpeed / GameObject.slowMotion;
 	private float scrollSpeed = normalScrollSpeed;
@@ -94,5 +96,21 @@ public class Camera {
 
 	public void setTarget(GameObject target) {
 		this.target = target;
+	}
+
+	public float getBackgroundSpeed() {
+		return backgroundSpeed;
+	}
+
+	public void setBackgroundSpeed(float backgroundSpeed) {
+		this.backgroundSpeed = backgroundSpeed;
+	}
+
+	public float getMidgroundSpeed() {
+		return midgroundSpeed;
+	}
+
+	public void setMidgroundSpeed(float midgroundSpeed) {
+		this.midgroundSpeed = midgroundSpeed;
 	}
 }

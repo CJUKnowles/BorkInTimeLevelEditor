@@ -205,12 +205,16 @@ public class MeleeEnemy extends GameObject {
 
 			if (fallDistance > 0) {
 
-				if ((gm.getCollision(tileX, tileY + 1) || gm.getCollision(tileX + (int) Math.signum((int) Math.abs(offX) > padding ? offX : 0), tileY + 1)) && offY > 0) {
+				if ((gm.getCollision(tileX, tileY + 1)  || gm.getCollisionNum(tileX, tileY + 1) == 4 ||  gm.getCollision(tileX + (int) Math.signum((int) Math.abs(offX) > padding ? offX : 0), tileY + 1)) && offY > 0) {
 					fallDistance = 0;
 					offY = 0;
 					ground = true;
 				}
 			}
+			
+			//Falling through platforms
+
+			//End of falling through platforms
 			// End Jump and Gravity
 
 			// Final Position

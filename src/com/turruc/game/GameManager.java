@@ -31,7 +31,9 @@ public class GameManager extends AbstractGame {
 
 	private ImageTile dirt;
 	private Image background;
+	private Image midground;
 	private Image level;
+	private Image platform;
 	private ImageTile lava;
 	private Player player;
 
@@ -42,13 +44,15 @@ public class GameManager extends AbstractGame {
 	private float anim = 0;
 
 	public GameManager() {
-		player = new Player(5, 5);
+		player = new Player(8, 8);
 		getObjects().add(player);
 		level = new Image("/level.png");
 		loadLevel("/level.png");
 		camera = new Camera(EntityType.player);
 		dirt = new ImageTile("/dirtTileset.png", 32, 32);
 		background = new Image("/background.png");
+		midground = new Image("/midground.png");
+		platform = new Image("/platform.png");
 		lava = new ImageTile("/lava.png", 32, 32);
 	}
 
@@ -88,10 +92,15 @@ public class GameManager extends AbstractGame {
 		anim %= 4;
 
 		// Start of drawing map
-		r.drawFillRect(0, 0, levelW * TS, levelH * TS, 0xff488Aff);
-		// r.drawImage(background, 0, 0);
+		for(int i = 0; i < (levelW * 32)/background.getW(); i++) { //add 1 to i < x if drawing one too few backgrounds
+			r.drawImage(background, (int) (i * background.getW() + camera.getOffX() * camera.getBackgroundSpeed()), 0);
+		}
+		
+		for(int i = 0; i < (levelW * 32)/background.getW(); i++) { //add 1 to i < x if drawing one too few backgrounds
+			r.drawImage(midground, (int) (i * midground.getW() + camera.getOffX() * camera.getMidgroundSpeed()), 0);
+		}
 
-		for (int y = 0; y < levelH; y++) {
+		for (int y = 0; y < levelH; y++)  {
 			for (int x = 0; x < levelW; x++) {
 				// drawing normal tileset (dirt, cave, etc)
 				if (collision[x + y * levelW] == 1) {
@@ -168,6 +177,13 @@ public class GameManager extends AbstractGame {
 
 				}
 				// end of drawing lava
+				
+				// Drawing lava
+				if (collision[x + y * levelW] == 4) {
+						r.drawImage(platform, x * TS, y * TS);
+
+				}
+				// end of drawing lava
 
 				// end of drawing map
 			}
@@ -209,6 +225,8 @@ public class GameManager extends AbstractGame {
 					collision[x + y * levelImage.getW()] = -2;// mana ball
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.YELLOW.getRGB()) {// yellow
 					collision[x + y * levelImage.getW()] = 3;// lava
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff963200) {// brown
+					collision[x + y * levelImage.getW()] = 4;// platform
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ffff) {// teal
 					getObjects().add(new MeleeEnemy(this, x, y)); //meleeEnemy
 				}
