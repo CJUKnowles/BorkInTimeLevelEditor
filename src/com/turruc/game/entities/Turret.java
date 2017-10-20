@@ -13,7 +13,6 @@ public class Turret extends GameObject {
 	private float targetX;
 	private float targetY;
 
-	private int tileX, tileY;
 	private float offX, offY;
 	private GameManager gm;
 	private double angle = 0;
@@ -24,8 +23,8 @@ public class Turret extends GameObject {
 	
 	public Turret(GameManager gm, int posX, int posY) {
 		this.tag = EntityType.turret;
-		this.tileX = posX;
-		this.tileY = posY;
+		tileX = posX;
+		tileY = posY;
 		this.offX = 0;
 		this.offY = 0;
 		this.posX = posX * GameManager.TS;

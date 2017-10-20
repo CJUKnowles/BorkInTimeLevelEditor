@@ -12,7 +12,6 @@ public class MeleeEnemy extends GameObject {
 
 	private int direction = 1;
 	private float anim = 0;
-	private int tileX, tileY;
 	private float offX, offY;
 
 	private float normalSpeed = 100;
@@ -56,8 +55,8 @@ public class MeleeEnemy extends GameObject {
 
 	public MeleeEnemy(GameManager gm, int posX, int posY) {
 		this.tag = EntityType.meleeEnemy;
-		this.tileX = posX;
-		this.tileY = posY;
+		super.tileX = posX;
+		super.tileY = posY;
 		this.offX = 0;
 		this.offY = 0;
 		this.posX = posX * GameManager.TS;

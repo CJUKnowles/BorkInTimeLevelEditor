@@ -16,13 +16,11 @@ public class ResourceBall extends GameObject {
 	private int animationSpeed = normalAnimationSpeed;
 	private ImageTile image = new ImageTile("/resourceBall.png", 32, 32);
 
-	private int tileX;
-	private int tileY;
 	private SoundClip woosh;
 
 	public ResourceBall(GameManager gm, int tileX, int tileY, int type, int amount) {
-		this.tileX = tileX;
-		this.tileY = tileY;
+		super.tileX = tileX;
+		super.tileY = tileY;
 		this.posX = tileX * GameManager.TS;
 		this.posY = tileY * GameManager.TS;
 		this.type = type;

@@ -20,6 +20,9 @@ public class LOSBullet extends GameObject {
 		posX = tileX * GameManager.TS + offX;
 		posY = tileY * GameManager.TS + offY;
 
+		super.tileX = tileX;
+		super.tileX = tileY;
+		
 		double angle = Math.atan2(targetX - posX, targetY - posY);
 		this.xVelocity = speed * Math.cos(angle);
 		this.yVelocity = speed * Math.sin(angle);

@@ -8,7 +8,6 @@ import com.turruc.game.GameManager;
 public class EnemyBullet extends GameObject {
 	private Image bullet = new Image("/bullet.png");
 
-	private int tileX, tileY;
 	private float offX, offY;
 
 	private float normalSpeed = 400; // 400

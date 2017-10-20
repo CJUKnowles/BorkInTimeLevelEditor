@@ -41,6 +41,7 @@ public class CameraFollow extends GameObject {
 				}
 				
 			}else if(currentCollision == -1 || currentCollision == -2) {//resource ball
+				
 				for(GameObject obj : GameManager.getObjects()) {
 					if(obj instanceof ResourceBall) {
 						if(((ResourceBall)obj).getTileX() == tileX && ((ResourceBall)obj).getTileY() == tileY) {
@@ -49,6 +50,7 @@ public class CameraFollow extends GameObject {
 						}
 					}
 				}
+				
 			}
 		}
 		

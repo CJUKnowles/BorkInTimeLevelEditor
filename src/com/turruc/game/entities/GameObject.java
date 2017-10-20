@@ -7,9 +7,11 @@ import com.turruc.game.GameManager;
 public abstract class GameObject {
 	protected EntityType tag;
 	protected float posX, posY;
+	protected int tileX, tileY;
 	protected int width, height;
 	protected boolean dead = false;
 	public static int slowMotion = 8;
+	
 	
 	public abstract void update(GameContainer gc, GameManager gm, float dt);
 
@@ -69,4 +71,13 @@ public abstract class GameObject {
 	public void setDead(boolean dead) {
 		this.dead = dead;
 	}
+	
+	public float getTileX() {
+		return tileX;
+	}
+
+	public float getTileY() {
+		return tileY;
+	}
+	
 }
