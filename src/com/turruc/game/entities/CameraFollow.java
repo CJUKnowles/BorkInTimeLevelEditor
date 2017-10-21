@@ -29,6 +29,10 @@ public class CameraFollow extends GameObject {
 			tileX = (int) ((x + gm.getCamera().getOffX() - GameManager.TS/2)/GameManager.TS   );
 			tileY = (int) ((y + gm.getCamera().getOffY() - GameManager.TS/2)/GameManager.TS   );
 		}
+		//if still out of bounds return
+		if(tileY * gm.getLevelW() + tileX > gm.getCollision().length) {
+			return;
+		}
 		
 		//scrolling
 		int scroll = -gc.getInput().getScroll();

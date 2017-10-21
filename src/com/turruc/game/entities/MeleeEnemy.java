@@ -8,74 +8,32 @@ import com.turruc.game.GameManager;
 
 public class MeleeEnemy extends GameObject {
 	private ImageTile meleeEnemy = new ImageTile("/player.png", 32, 32);
-	private int padding, paddingTop;
 
 	private int direction = 1;
 	private float anim = 0;
-	private float offX, offY;
-
-	private float normalSpeed = 100;
-	private float slowSpeed = normalSpeed / slowMotion;
-	private float speed = normalSpeed;
-
-	private float fallDistance = 0;
-	private float normalFallSpeed = 20;
-	private float slowFallSpeed = normalFallSpeed / slowMotion;
-	private float fallSpeed = normalFallSpeed;
-	private float jump = -9; // must be negative
-	private boolean ground = false;
-	private boolean groundLast = false;
 
 	private int maxHealth = 100;
 	private int health = maxHealth;
-
-	private int normalAnimationSpeed = 10;
-	private int slowAnimationSpeed = normalAnimationSpeed / slowMotion;
-	private int animationSpeed = normalAnimationSpeed;
-
-	private double lastTimeLavaDamage;
-	private int lavaDamageCooldown = 1;
-	private int lavaDamage = 10;
-
-	private boolean againstWall = false;
-
-	private double lastTimeDamage;
-	private int damageCooldown = 1;
-	private int damage = 25;
 
 	private boolean attacking = false;
 	private float attackAnim = 4;
 
 	private SoundClip ugh;
-	private SoundClip boof;
-
-
-	private int manaReward = 20;
-	private int range = 60;
 
 	public MeleeEnemy(GameManager gm, int posX, int posY) {
 		this.tag = EntityType.meleeEnemy;
 		super.tileX = posX;
 		super.tileY = posY;
-		this.offX = 0;
-		this.offY = 0;
 		this.posX = posX * GameManager.TS;
 		this.posY = posY * GameManager.TS;
 		this.width = 32;
 		this.height = 32;
 
-		this.padding = 4;
-		this.paddingTop = 0;
-
-
 		ugh = new SoundClip("/audio/ugh.wav");
-		boof = new SoundClip("/audio/boof.wav");
 	}
 
 	@Override
 	public void update(GameContainer gc, GameManager gm, float dt) {
-		
-		
 
 	}
 
@@ -106,8 +64,6 @@ public class MeleeEnemy extends GameObject {
 		this.posY = posY;
 		this.tileX = (int) (posX / GameManager.TS);
 		this.tileY = (int) (posY / GameManager.TS);
-		this.offX = (int) (posX % GameManager.TS);
-		this.offY = (int) (posY % GameManager.TS);
 	}
 
 	public void setDead(boolean dead) {
@@ -122,7 +78,7 @@ public class MeleeEnemy extends GameObject {
 	public void setHealth(int health) {
 		this.health = health;
 	}
-	
+
 	public float getTileX() {
 		return tileX;
 	}

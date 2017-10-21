@@ -32,7 +32,8 @@ import com.turruc.game.entities.Turret;
 
 public class GameManager extends AbstractGame {
 	private static GameContainer gc;
-
+	public static GameManager gm;
+	
 	public static final int TS = 32; // tilesize for hitboxes
 
 	private static ArrayList<GameObject> objects = new ArrayList<GameObject>();
@@ -56,6 +57,11 @@ public class GameManager extends AbstractGame {
 	private float anim = 0;
 
 	public GameManager() {
+		if(gm == null) {
+			gm = this;
+		}else {
+			throw new IllegalStateException("Tried to create new instance of GameManager");
+		}
 		level = new Image("/level.png");
 		loadLevel("/level.png");
 		camera = new Camera(EntityType.CameraFollow);
@@ -85,8 +91,8 @@ public class GameManager extends AbstractGame {
 		if(gc.getInput().isKeyDown(KeyEvent.VK_F10)) {
 			try {
 				System.out.println("Running program");
-				Process proc = Runtime.getRuntime().exec("java -Dsun.java2d.d3d=false -Dsun.java2d.noddraw=true -cp \"ABorkInTime.jar;resources;.\" com.turruc.game.GameManager true");
-				InputStream in = proc.getInputStream();
+				Runtime.getRuntime().exec("java -Dsun.java2d.d3d=false -Dsun.java2d.noddraw=true -cp \"ABorkInTime.jar;resources;.\" com.turruc.game.GameManager true");
+				//InputStream in = proc.getInputStream();
 			} catch (IOException e) {
 				System.out.println("Running error");
 				e.printStackTrace();

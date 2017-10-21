@@ -10,14 +10,9 @@ public class Turret extends GameObject {
 	private Image turret = new Image("/turret.png");
 	private Image turretHead = new Image("/turretHead.png");
 
-	private float targetX;
-	private float targetY;
-
-	private float offX, offY;
 	private GameManager gm;
 	private double angle = 0;
 	private double angle2;
-	private int range = 60; // 5 per tile roughly
 	
 	private SoundClip boof;
 	
@@ -25,8 +20,6 @@ public class Turret extends GameObject {
 		this.tag = EntityType.turret;
 		tileX = posX;
 		tileY = posY;
-		this.offX = 0;
-		this.offY = 0;
 		this.posX = posX * GameManager.TS;
 		this.posY = posY * GameManager.TS;
 		this.width = 32;
@@ -48,11 +41,6 @@ public class Turret extends GameObject {
 			angle2 = 180;
 		}
 		
-	}
-
-	public boolean checkLOS(float x0, float y0, float x1, float y1) {
-		LOSBullet check = new LOSBullet((int) targetX, (int) targetY, tileX, tileY, offX, offY, GameManager.getGc(), gm, GameManager.getGc().getDt(), range, true, false);
-		return check.LOS;
 	}
 
 	@Override
