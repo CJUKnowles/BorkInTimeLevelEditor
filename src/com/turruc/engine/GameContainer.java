@@ -1,5 +1,7 @@
 package com.turruc.engine;
 
+import com.turruc.LevelPicker;
+
 public class GameContainer implements Runnable {
 
 	private Thread thread;
@@ -7,6 +9,8 @@ public class GameContainer implements Runnable {
 	private Renderer renderer;
 	private Input input;
 	private AbstractGame game;
+	
+	public static LevelPicker GUI;
 
 	private boolean running = false;
 	private final double UPDATE_CAP = 1.0 / 60.0;
@@ -27,12 +31,18 @@ public class GameContainer implements Runnable {
 		renderer = new Renderer(this);
 		input = new Input(this);
 
+		
+		GUI = new LevelPicker(getWindow());
+		
 		thread = new Thread(this);
 		thread.run();
+		
 	}
 
 	public void stop() {
 
+		GUI.exit();
+		System.exit(0);
 	}
 
 	public void run() {

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import com.sun.glass.events.KeyEvent;
+import com.turruc.LevelPicker;
 import com.turruc.engine.AbstractGame;
 import com.turruc.engine.GameContainer;
 import com.turruc.engine.Renderer;
@@ -35,6 +36,7 @@ public class GameManager extends AbstractGame {
 	
 	public static final int TS = 32; // tilesize for hitboxes
 
+	
 	private static ArrayList<GameObject> objects = new ArrayList<GameObject>();
 	private Camera camera;
 
@@ -72,8 +74,10 @@ public class GameManager extends AbstractGame {
 	}
 
 	public static void main(String[] args) {
+		
 		gc = new GameContainer(new GameManager());
 		gc.start();
+		
 	}
 
 	@Override
@@ -228,6 +232,7 @@ public class GameManager extends AbstractGame {
 		}
 
 		r.drawText("Current Block: " + BuildEnt.values()[CameraFollow.selection].getName(), (int) camera.getOffX(), 32, Color.WHITE.getRGB());
+		LevelPicker.update();
 
 	}
 
