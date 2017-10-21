@@ -1,13 +1,26 @@
 package com.turruc.game;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferInt;
+import java.awt.image.DirectColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import com.sun.glass.events.KeyEvent;
 import com.turruc.engine.AbstractGame;
 import com.turruc.engine.GameContainer;
 import com.turruc.engine.Renderer;
 import com.turruc.engine.gfx.Image;
 import com.turruc.engine.gfx.ImageTile;
+import com.turruc.game.entities.BuildEnt;
 import com.turruc.game.entities.CameraFollow;
 import com.turruc.game.entities.EntityType;
 import com.turruc.game.entities.GameObject;
@@ -65,6 +78,9 @@ public class GameManager extends AbstractGame {
 
 	@Override
 	public void update(GameContainer gc, float dt) {
+		if(gc.getInput().isKeyDown(KeyEvent.VK_F9)) {
+			exportToImage();
+		}
 		for (int i = 0; i < getObjects().size(); i++) {
 			getObjects().get(i).update(gc, this, dt);
 			if (getObjects().get(i).isDead()) {
@@ -74,6 +90,8 @@ public class GameManager extends AbstractGame {
 		}
 		camera.update(gc, this, dt);
 	}
+
+
 
 	@Override
 	public void render(GameContainer gc, Renderer r) {
@@ -194,10 +212,7 @@ public class GameManager extends AbstractGame {
 
 		}
 
-		r.drawText("Left Click: Shoot", (int) camera.getOffX(), 32, Color.WHITE.getRGB());
-		r.drawText("Right Click: Melee", (int) camera.getOffX(), 48, Color.WHITE.getRGB());
-		r.drawText("Shift: Teleport", (int) camera.getOffX(), 64, Color.WHITE.getRGB());
-		r.drawText("Ctrl: Slow Motion", (int) camera.getOffX(), 80, Color.WHITE.getRGB());
+		r.drawText("Current Block: " + BuildEnt.values()[CameraFollow.selection].getName(), (int) camera.getOffX(), 32, Color.WHITE.getRGB());
 
 	}
 
@@ -213,25 +228,26 @@ public class GameManager extends AbstractGame {
 		for (int y = 0; y < levelImage.getH(); y++) {
 			for (int x = 0; x < levelImage.getW(); x++) {
 
-				if (levelImage.getP()[x + y * levelImage.getW()] == Color.PINK.getRGB()) {
-					collision[x + y * levelImage.getW()] = -100;// player
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.BLACK.getRGB()) {// black
+				if (levelImage.getP()[x + y * levelImage.getW()] == 0xffff00ff) {
+					//collision[x + y * levelImage.getW()] = -100;// player
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff000000) {// black
 					collision[x + y * levelImage.getW()] = 1; // collision block
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.WHITE.getRGB()) {// white
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffffffff) {// white
 					collision[x + y * levelImage.getW()] = 0;// air
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.GREEN.getRGB()) {// green
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ff00) {// green
 					collision[x + y * levelImage.getW()] = 2;// turret
 				} else if ((levelImage.getP()[x + y * levelImage.getW()] | 0xff000000) == Color.RED.getRGB()) {// red // | 0xff000000 removes alpha
 					collision[x + y * levelImage.getW()] = -1;// health ball 
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.BLUE.getRGB()) {// blue
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff0000ff) {// blue
 					collision[x + y * levelImage.getW()] = -2;// mana ball
-				} else if (levelImage.getP()[x + y * levelImage.getW()] == Color.YELLOW.getRGB()) {// yellow
+				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffffff00) {// yellow
 					collision[x + y * levelImage.getW()] = 3;// lava
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff963200) {// Brown
 					collision[x + y * levelImage.getW()] = 4;// platform
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff6400ff) {// Purple
 					collision[x + y * levelImage.getW()] = 5;// ladder
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff00ffff) {// teal
+					collision[x + y * levelImage.getW()] = -100;
 					getObjects().add(new MeleeEnemy(this, x, y)); //meleeEnemy
 				}
 			}
@@ -307,5 +323,44 @@ public class GameManager extends AbstractGame {
 	public static GameContainer getGc() {
 		return gc;
 	}
+	
+	private void exportToImage() {
+		
+		
+		int width = getLevelW();
+		int height = getLevelH();
+		System.out.println("Level w = " + width + " Level h = " + height);
+		int[] rgbs = new int[width * height];
+		
+		for(int j = 0; j < rgbs.length; j++) {
+			int col = getCollision()[j];
+			boolean found = false;
+			for(BuildEnt ent : BuildEnt.values()) {
+				if(ent.getCollision() == col) {
+					rgbs[j] = ent.getColor();
+					found = true;
+					break;
+				}
+			}
+			
+			if(!found) {
+				rgbs[j] = 0xffffffff;
+			}
+		}
+
+		DataBuffer rgbData = new DataBufferInt(rgbs, rgbs.length);
+
+		int[] masks = new int[]{0xff0000, 0xff00, 0xff, 0xff000000};
+		WritableRaster raster = Raster.createPackedRaster(rgbData, width, height, width, masks, null);
+		ColorModel colorModel = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
+		BufferedImage img = new BufferedImage(colorModel, raster, false, null);
+
+		try {
+			ImageIO.write(img, "png", new File("resources/level.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 }
