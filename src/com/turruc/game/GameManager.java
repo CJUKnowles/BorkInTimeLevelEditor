@@ -10,6 +10,7 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -80,6 +81,16 @@ public class GameManager extends AbstractGame {
 	public void update(GameContainer gc, float dt) {
 		if(gc.getInput().isKeyDown(KeyEvent.VK_F9)) {
 			exportToImage();
+		}
+		if(gc.getInput().isKeyDown(KeyEvent.VK_F10)) {
+			try {
+				System.out.println("Running program");
+				Process proc = Runtime.getRuntime().exec("java -Dsun.java2d.d3d=false -Dsun.java2d.noddraw=true -cp \"ABorkInTime.jar;resources;.\" com.turruc.game.GameManager true");
+				InputStream in = proc.getInputStream();
+			} catch (IOException e) {
+				System.out.println("Running error");
+				e.printStackTrace();
+			}
 		}
 		for (int i = 0; i < getObjects().size(); i++) {
 			getObjects().get(i).update(gc, this, dt);
@@ -329,7 +340,6 @@ public class GameManager extends AbstractGame {
 		
 		int width = getLevelW();
 		int height = getLevelH();
-		System.out.println("Level w = " + width + " Level h = " + height);
 		int[] rgbs = new int[width * height];
 		
 		for(int j = 0; j < rgbs.length; j++) {
