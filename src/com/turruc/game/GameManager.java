@@ -10,7 +10,6 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -51,7 +50,6 @@ public class GameManager extends AbstractGame {
 	private ImageTile lava;
 
 	private int normalAnimationSpeed = 7;
-	private int slowAnimationSpeed = normalAnimationSpeed / GameObject.slowMotion;
 	private int animationSpeed = normalAnimationSpeed;
 
 	private float anim = 0;

@@ -12,9 +12,6 @@ public class Camera {
 	private float camSpeed = 7;
 	private float backgroundSpeed = (float) .7;
 	private float midgroundSpeed = (float) .5;
-	private float normalScrollSpeed = (float) 2;
-	private float slowScrollSpeed = normalScrollSpeed / GameObject.slowMotion;
-	private float scrollSpeed = normalScrollSpeed;
 
 	public Camera(EntityType tag) {
 		this.targetTag = tag;
@@ -29,7 +26,6 @@ public class Camera {
 			return;
 		}
 
-			scrollSpeed = normalScrollSpeed;
 
 		float targetX = (target.getPosX() + target.getWidth() / 2) - gc.getWidth() / 2;
 		offX -= dt * (offX - targetX) * camSpeed;

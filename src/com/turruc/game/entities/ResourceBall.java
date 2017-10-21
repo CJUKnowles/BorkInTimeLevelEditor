@@ -12,7 +12,6 @@ public class ResourceBall extends GameObject {
 	private int amount;
 	private float anim = 0;
 	private int normalAnimationSpeed = 10;
-	private int slowAnimationSpeed = normalAnimationSpeed / slowMotion;
 	private int animationSpeed = normalAnimationSpeed;
 	private ImageTile image = new ImageTile("/resourceBall.png", 32, 32);
 
@@ -56,5 +55,13 @@ public class ResourceBall extends GameObject {
 
 	public float getTileY() {
 		return tileY;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 }
