@@ -59,6 +59,12 @@ public class CameraFollow extends GameObject {
 			posX -= GameManager.TS/div;
 		}
 		
+		if (gc.getInput().isKey(KeyEvent.VK_W)){
+			posY += GameManager.TS/div;
+		}else if(gc.getInput().isKey(KeyEvent.VK_S)){
+			posY -= GameManager.TS/div;
+		}
+		
 		int col = gm.getCollision()[ (tileY * gm.getLevelW()) + tileX];
 		
 		//if r clicking
