@@ -13,9 +13,9 @@ public class Turret extends GameObject {
 	private GameManager gm;
 	private double angle = 0;
 	private double angle2;
-	
-	private SoundClip boof;
-	
+
+	private static SoundClip boof;
+
 	public Turret(GameManager gm, int posX, int posY) {
 		this.tag = EntityType.turret;
 		tileX = posX;
@@ -25,8 +25,9 @@ public class Turret extends GameObject {
 		this.width = 32;
 		this.height = 32;
 		this.gm = gm;
-		
-		boof = new SoundClip("/audio/boof.wav");
+
+		if(boof == null)
+			boof = new SoundClip("/audio/boof.wav");
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class Turret extends GameObject {
 		} else if (gm.getCollisionNum(tileX, tileY - 1) == 1) { // above
 			angle2 = 180;
 		}
-		
+
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class Turret extends GameObject {
 		this.dead = dead;
 		boof.play();
 	}
-	
+
 	public float getTileX() {
 		return tileX;
 	}

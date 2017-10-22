@@ -18,7 +18,7 @@ public class MeleeEnemy extends GameObject {
 	private boolean attacking = false;
 	private float attackAnim = 4;
 
-	private SoundClip ugh;
+	private static SoundClip ugh;
 
 	public MeleeEnemy(GameManager gm, int posX, int posY) {
 		this.tag = EntityType.meleeEnemy;
@@ -29,7 +29,8 @@ public class MeleeEnemy extends GameObject {
 		this.width = 32;
 		this.height = 32;
 
-		ugh = new SoundClip("/audio/ugh.wav");
+		if(ugh == null)
+			ugh = new SoundClip("/audio/ugh.wav");
 	}
 
 	@Override

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import com.sun.glass.events.KeyEvent;
 import com.turruc.LevelPicker;
 import com.turruc.engine.AbstractGame;
 import com.turruc.engine.GameContainer;

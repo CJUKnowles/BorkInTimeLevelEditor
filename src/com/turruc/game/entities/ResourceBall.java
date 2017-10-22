@@ -15,7 +15,7 @@ public class ResourceBall extends GameObject {
 	private int animationSpeed = normalAnimationSpeed;
 	private ImageTile image = new ImageTile("/resourceBall.png", 32, 32);
 
-	private SoundClip woosh;
+	private static SoundClip woosh;
 
 	public ResourceBall(GameManager gm, int tileX, int tileY, int type, int amount) {
 		super.tileX = tileX;
@@ -26,7 +26,8 @@ public class ResourceBall extends GameObject {
 		this.amount = amount;
 
 		this.tag = EntityType.resourceBall;
-		woosh = new SoundClip("/audio/woosh.wav");
+		if(woosh == null)
+			woosh = new SoundClip("/audio/woosh.wav");
 	}
 
 	@Override
