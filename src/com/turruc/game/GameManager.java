@@ -64,12 +64,12 @@ public class GameManager extends AbstractGame {
 		}else {
 			throw new IllegalStateException("Tried to create new instance of GameManager");
 		}
-		level = new Image("/level.png");
-		loadLevel("/level.png");
+		level = new Image("/levels/levelExample/levelExample.png");
+		loadLevel("/levels/levelExample/levelExample.png");
 		camera = new Camera(EntityType.CameraFollow);
 		dirt = new ImageTile("/dirtTileset.png", 32, 32);
-		background = new Image("/background.png");
-		midground = new Image("/midground.png");
+		background = new Image("/levels/levelExample/backgroundExample.png");
+		midground = new Image("/levels/levelExample/midgroundExample.png");
 		platform = new Image("/platform.png");
 		lava = new ImageTile("/lava.png", 32, 32);
 		ladder = new Image("/ladder.png");
@@ -103,12 +103,7 @@ public class GameManager extends AbstractGame {
 	
 	@Override
 	public void update(GameContainer gc, float dt) {
-		if(gc.getInput().isKeyDown(KeyEvent.VK_F9)) {
-			exportToImage("levels/levelExample/", "levelExample");
-		}
-		if(gc.getInput().isKeyDown(KeyEvent.VK_F10)) {
-				runMainGame();
-		}
+		
 		for (int i = 0; i < getObjects().size(); i++) {
 			getObjects().get(i).update(gc, this, dt);
 			if (getObjects().get(i).isDead()) {
@@ -255,8 +250,9 @@ public class GameManager extends AbstractGame {
 
 		for (int y = 0; y < level.getH(); y++) {
 			for (int x = 0; x < level.getW(); x++) {
-
-				if (level.getP()[x + y * level.getW()] == 0xffff00ff) {
+				if(y == 0 || y == level.getH()-1 || x == 0 || x == level.getW()-1) {
+					GameManager.gm.collision[x + y * level.getW()] = 1;
+				}else if (level.getP()[x + y * level.getW()] == 0xffff00ff) {
 					GameManager.gm.collision[x + y * level.getW()] = -100;// player
 				} else if (level.getP()[x + y * level.getW()] == Color.BLACK.getRGB()) {// black
 					GameManager.gm.collision[x + y * level.getW()] = 1; // collision block
@@ -279,6 +275,8 @@ public class GameManager extends AbstractGame {
 				}
 			}
 		}
+		
+		
 	}
 	public void loadLevel(String path) {
 		Image levelImage = new Image(path);
@@ -292,7 +290,9 @@ public class GameManager extends AbstractGame {
 		for (int y = 0; y < levelImage.getH(); y++) {
 			for (int x = 0; x < levelImage.getW(); x++) {
 
-				if (levelImage.getP()[x + y * levelImage.getW()] == 0xffff00ff) {
+				if(y == 0 || y == level.getH()-1 || x == 0 || x == level.getW()-1) {
+					GameManager.gm.collision[x + y * level.getW()] = 1;
+				}else if (levelImage.getP()[x + y * levelImage.getW()] == 0xffff00ff) {
 					//collision[x + y * levelImage.getW()] = -100;// player
 				} else if (levelImage.getP()[x + y * levelImage.getW()] == 0xff000000) {// black
 					collision[x + y * levelImage.getW()] = 1; // collision block

@@ -60,13 +60,12 @@ public class CameraFollow extends GameObject {
 		}
 		
 		if (gc.getInput().isKey(KeyEvent.VK_W)){
-			posY += GameManager.TS/div;
-		}else if(gc.getInput().isKey(KeyEvent.VK_S)){
 			posY -= GameManager.TS/div;
+		}else if(gc.getInput().isKey(KeyEvent.VK_S)){
+			posY += GameManager.TS/div;
 		}
 		
 		int col = gm.getCollision()[ (tileY * gm.getLevelW()) + tileX];
-		
 		
 		if(tileY == 0 || tileY == gm.getLevelH()-1 || tileX == 0 || tileX == gm.getLevelW()-1) {
 			return;
