@@ -138,7 +138,9 @@ public class CameraFollow extends GameObject {
 	}
 
 	@Override
-	public void render(GameContainer gc, Renderer r) {}
+	public void render(GameContainer gc, Renderer r){
+		r.drawFillRect(tileX, tileY, 5, 5, 0xffff0000);
+	}
 	public void setDead(boolean dead) {}
 
 }
