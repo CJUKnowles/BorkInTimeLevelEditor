@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -124,7 +123,7 @@ public class LevelPicker extends JFrame{
 		btnSave.setBounds(10, 926, 117, 23);
 		btnSave.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent arg0) {
-				GameManager.gm.exportToImage("level");
+				GameManager.gm.exportToImage("levels/levelExample/", "levelExample");
 			}
 		});
 		contentPane.add(btnSave);
@@ -134,7 +133,7 @@ public class LevelPicker extends JFrame{
 		btnSaveAndRun.setBounds(156, 926, 117, 23);
 		btnSaveAndRun.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent arg0) {
-				GameManager.gm.exportToImage("level");
+				GameManager.gm.exportToImage("levels/levelExample/", "levelExample");
 				GameManager.gm.runMainGame();
 
 			}

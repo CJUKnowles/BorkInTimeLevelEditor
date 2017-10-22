@@ -104,7 +104,7 @@ public class GameManager extends AbstractGame {
 	@Override
 	public void update(GameContainer gc, float dt) {
 		if(gc.getInput().isKeyDown(KeyEvent.VK_F9)) {
-			exportToImage("level");
+			exportToImage("levels/levelExample/", "levelExample");
 		}
 		if(gc.getInput().isKeyDown(KeyEvent.VK_F10)) {
 				runMainGame();
@@ -392,7 +392,7 @@ public class GameManager extends AbstractGame {
 		GameManager.gm.dirt = new ImageTile(s, 32, 32);
 	}
 	
-	public void exportToImage(String name) {
+	public void exportToImage(String path, String name) {
 		int width = getLevelW();
 		int height = getLevelH();
 		int[] rgbs = new int[width * height];
@@ -423,7 +423,7 @@ public class GameManager extends AbstractGame {
 		try {
 			if(!name.endsWith(".png")) name += ".png";
 			
-			ImageIO.write(img, "png", new File("resources/" + name));
+			ImageIO.write(img, "png", new File("resources/" + path + name));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
