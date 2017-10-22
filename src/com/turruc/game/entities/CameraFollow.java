@@ -67,6 +67,10 @@ public class CameraFollow extends GameObject {
 		
 		int col = gm.getCollision()[ (tileY * gm.getLevelW()) + tileX];
 		
+		
+		if(tileY == 0 || tileY == gm.getLevelH()-1 || tileX == 0 || tileX == gm.getLevelW()-1) {
+			return;
+		}
 		//if r clicking
 		if(gc.getInput().isButton(3)) {
 			

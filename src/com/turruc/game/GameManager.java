@@ -42,7 +42,7 @@ public class GameManager extends AbstractGame {
 
 	private int[] collision;
 	private int levelW, levelH;
-
+	
 	private ImageTile dirt;
 	private Image background;
 	private Image midground;
@@ -51,6 +51,8 @@ public class GameManager extends AbstractGame {
 	private Image ladder;
 	private ImageTile lava;
 
+	private Process proc;
+	
 	private int normalAnimationSpeed = 7;
 	private int animationSpeed = normalAnimationSpeed;
 
@@ -80,25 +82,32 @@ public class GameManager extends AbstractGame {
 		
 	}
 
+	
 	@Override
 	public void init(GameContainer gc) {
 		gc.getRenderer().setAmbientColor(-1);
 	}
 
+	public void runMainGame(){
+		if(proc != null) {
+			proc.destroy();
+			proc = null;
+		}
+		try {
+			proc = Runtime.getRuntime().exec("java -Dsun.java2d.d3d=false -Dsun.java2d.noddraw=true -cp \"ABorkInTime.jar;resources;.\" com.turruc.game.GameManager true");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	@Override
 	public void update(GameContainer gc, float dt) {
 		if(gc.getInput().isKeyDown(KeyEvent.VK_F9)) {
-			exportToImage();
+			exportToImage("level");
 		}
 		if(gc.getInput().isKeyDown(KeyEvent.VK_F10)) {
-			try {
-				System.out.println("Running program");
-				Runtime.getRuntime().exec("java -Dsun.java2d.d3d=false -Dsun.java2d.noddraw=true -cp \"ABorkInTime.jar;resources;.\" com.turruc.game.GameManager true");
-				//InputStream in = proc.getInputStream();
-			} catch (IOException e) {
-				System.out.println("Running error");
-				e.printStackTrace();
-			}
+				runMainGame();
 		}
 		for (int i = 0; i < getObjects().size(); i++) {
 			getObjects().get(i).update(gc, this, dt);
@@ -236,6 +245,41 @@ public class GameManager extends AbstractGame {
 
 	}
 
+	public void updateLevel() {
+
+		level = new Image("/level.png");
+		
+		GameManager.gm.levelW = level.getW();
+		GameManager.gm.levelH = level.getH();
+		GameManager.gm.collision = new int[GameManager.gm.levelW * GameManager.gm.levelH];
+
+		for (int y = 0; y < level.getH(); y++) {
+			for (int x = 0; x < level.getW(); x++) {
+
+				if (level.getP()[x + y * level.getW()] == 0xffff00ff) {
+					GameManager.gm.collision[x + y * level.getW()] = -100;// player
+				} else if (level.getP()[x + y * level.getW()] == Color.BLACK.getRGB()) {// black
+					GameManager.gm.collision[x + y * level.getW()] = 1; // collision block
+				} else if (level.getP()[x + y * level.getW()] == Color.WHITE.getRGB()) {// white
+					GameManager.gm.collision[x + y * level.getW()] = 0;// air
+				} else if (level.getP()[x + y * level.getW()] == Color.GREEN.getRGB()) {// green
+					GameManager.gm.collision[x + y * level.getW()] = 2;// turret
+				} else if ((level.getP()[x + y * level.getW()] | 0xff000000) == Color.RED.getRGB()) {// red // | 0xff000000 removes alpha
+					GameManager.gm.collision[x + y * level.getW()] = -1;// health ball 
+				} else if (level.getP()[x + y * level.getW()] == Color.BLUE.getRGB()) {// blue
+					GameManager.gm.collision[x + y * level.getW()] = -2;// mana ball
+				} else if (level.getP()[x + y * level.getW()] == Color.YELLOW.getRGB()) {// yellow
+					GameManager.gm.collision[x + y * level.getW()] = 3;// lava
+				} else if (level.getP()[x + y * level.getW()] == 0xff963200) {// Brown
+					GameManager.gm.collision[x + y * level.getW()] = 4;// platform
+				} else if (level.getP()[x + y * level.getW()] == 0xff6400ff) {// Purple
+					GameManager.gm.collision[x + y * level.getW()] = 5;// ladder
+				} else if (level.getP()[x + y * level.getW()] == 0xff00ffff) {// teal
+					//getObjects().add(new MeleeEnemy(this, x, y)); //meleeEnemy
+				}
+			}
+		}
+	}
 	public void loadLevel(String path) {
 		Image levelImage = new Image(path);
 
@@ -344,9 +388,11 @@ public class GameManager extends AbstractGame {
 		return gc;
 	}
 	
-	private void exportToImage() {
-		
-		
+	public static void updateTileSet(String s) {
+		GameManager.gm.dirt = new ImageTile(s, 32, 32);
+	}
+	
+	public void exportToImage(String name) {
 		int width = getLevelW();
 		int height = getLevelH();
 		int[] rgbs = new int[width * height];
@@ -375,7 +421,9 @@ public class GameManager extends AbstractGame {
 		BufferedImage img = new BufferedImage(colorModel, raster, false, null);
 
 		try {
-			ImageIO.write(img, "png", new File("resources/level.png"));
+			if(!name.endsWith(".png")) name += ".png";
+			
+			ImageIO.write(img, "png", new File("resources/" + name));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

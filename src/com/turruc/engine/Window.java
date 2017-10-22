@@ -30,7 +30,7 @@ public class Window {
 		frame.setLayout(new BorderLayout());
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.pack();
-		frame.setLocationRelativeTo(null);
+		frame.setLocation(0,0);
 		frame.setResizable(false);
 		frame.setVisible(true);
 

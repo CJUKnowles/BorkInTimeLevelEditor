@@ -19,7 +19,7 @@ public class GameContainer implements Runnable {
 											// scaled to fullscreen
 	private float scale = 2f; // Scales the resolution. 960x540 with a scale of 2f turns into 1920x1080
 								// (literally like a render scale in games)
-	private String title = "A Bork In Time!";
+	private String title = "Bork In Time Level Editor";
 
 	public GameContainer(AbstractGame game) {
 		this.game = game;
@@ -41,7 +41,7 @@ public class GameContainer implements Runnable {
 
 	public void stop() {
 
-		GUI.exit();
+		//LevelPicker.exit();
 		System.exit(0);
 	}
 
